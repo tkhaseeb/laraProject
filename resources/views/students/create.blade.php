@@ -1,6 +1,6 @@
 <html>
     <body>
-
+    <h1>Create Student</h1>
 
     <form action="{{ route('students.store') }}" method="POST">
         @csrf

@@ -16,8 +16,8 @@ use App\Http\Controllers\TeacherController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('home');
 
 
 // Route::get('/students', [StudentController::class, 'index'])->name('students.index');

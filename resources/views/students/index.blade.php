@@ -1,8 +1,5 @@
-<html>
-<head>
-    <title>Student List</title>
-</head>
-<body>
+@extends('layouts.app')
+@section('content')
     <h1>Student List</h1>
 
     @if (session('success'))
@@ -17,13 +14,14 @@
     <button type="submit">Search</button>
 </form>
 
-    <table border="1">
+    <table border="1" class="table table-bordered table-striped">
         <tr>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
             <th>Address</th>
             <th>DOB</th>
+            <th>Gender</th>
             <th>Actions</th>
         </tr>
         @foreach ($students as $student)
@@ -33,6 +31,7 @@
                 <td>{{ $student->phone }}</td>
                 <td>{{ $student->address }}</td>
                 <td>{{ $student->date_of_birth }}</td>
+                <td>{{ $student->gender }}</td>
                 <td>
                 <a href="{{ route('students.show', $student->id) }}">View</a> 
                 <a href="{{ route('students.edit', $student->id) }}">Edit</a>
@@ -48,4 +47,4 @@
         {{ $students->links() }} <!-- Pagination links -->
         
     <a href="{{ route('students.create') }}">Add New Student</a>
-</html>
+@endsection

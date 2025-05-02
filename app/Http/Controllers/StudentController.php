@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
     public function index(){
+        
         $students = Student::where(function($query){
             if(request('name')){
                 //$name = request('name');

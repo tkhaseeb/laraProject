@@ -35,6 +35,18 @@
             <option value="female">Female</option>
         </select><br><br>
 
+        <label for="city">City:</label><br>
+        <input type="text" id="city" name="city"  value="{{old('city')}}"><br><br>
+
+        <label for="state">State:</label><br>
+        <input type="text" id="state" name="state"  value="{{old('state')}}"><br><br>
+
+        <label for="country">Country:</label><br>
+        <input type="text" id="country" name="country"  value="{{old('country')}}"><br><br>
+
+        <label for="postal_code">Postal Code:</label><br>
+        <input type="text" id="postal_code" name="postal_code"  value="{{old('postal_code')}}"><br><br>
+
         <label for="image">Student Photo:</label><br>
         <input type="file" name="photo" id="photo"><br><br>
 

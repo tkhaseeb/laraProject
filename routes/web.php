@@ -31,3 +31,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::resource('/students', StudentController::class)->names('students')->middleware('auth');
+
+Route::get('students/{id}/payments/create', [StudentController::class, 'makePayment'])->name('students.payments.create');
+Route::post('students/{id}/payments', [StudentController::class, 'storePayment'])->name('students.payments.store');

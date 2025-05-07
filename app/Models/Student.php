@@ -18,4 +18,14 @@ class Student extends Model
         'gender',
         'photo'
     ];
+
+    public function profile()
+    {
+        return $this->hasOne(StudentProfile::class); 
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(StudentPayment::class);
+    }
 }

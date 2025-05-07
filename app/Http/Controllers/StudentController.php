@@ -42,7 +42,7 @@ class StudentController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $student = new Student();
+        //$student = new Student();
         // $student->name = $request->name;
         // $student->email = $request->email;
         // $student->phone = $request->phone;
@@ -58,7 +58,16 @@ class StudentController extends Controller
 
         }
 
-        $student->create($request->all());
+        $student = Student::create($request->except(['city', 'state', 'country', 'postal_code'])); //
+         //$request->only(['name', 'email', 'phone', 'address', 'date_of_birth']);
+
+        //return $student;
+        $student->profile()->create([
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'postal_code' => $request->postal_code         
+        ]);
 
         return redirect('/students')->with('success', 'Student created successfully.');
     }
@@ -94,5 +103,31 @@ class StudentController extends Controller
     public function show($id){
         $student = Student::find($id);
         return view('students.show', compact('student'));
+    }
+
+
+    public function makePayment($id){
+        //return $id;
+        $student = Student::find($id);
+        return view('students.payments.create', compact('student'));
+    }
+
+    public function storePayment(Request $request, $id){
+        //return $id;
+        $student = Student::find($id);
+        //return $student;
+        $request->validate([
+            'amount' => 'required|numeric',
+            'payment_date' => 'required|date',
+            'payment_method' => 'required|string|max:255'
+        ]);
+
+        $student->payments()->create([
+            'amount' => $request->amount,
+            'payment_date' => $request->payment_date,
+            'payment_method' => $request->payment_method
+        ]);
+
+        return redirect('/students')->with('success', 'Payment made successfully.');
     }
 }

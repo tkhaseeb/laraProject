@@ -40,6 +40,7 @@
                         @method('DELETE')
                         <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
+                    <a href="{{ route('students.payments.create', $student->id) }}">Make Payment</a>
             </tr>
         @endforeach
     </table>  
@@ -47,4 +48,5 @@
         {{ $students->links() }} <!-- Pagination links -->
         
     <a href="{{ route('students.create') }}">Add New Student</a>
+    
 @endsection

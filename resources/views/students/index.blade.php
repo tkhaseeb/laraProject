@@ -22,6 +22,8 @@
             <th>Address</th>
             <th>DOB</th>
             <th>Gender</th>
+            <th>Courses</th>
+            <th>Payments</th>
             <th>Actions</th>
         </tr>
         @foreach ($students as $student)
@@ -32,6 +34,19 @@
                 <td>{{ $student->address }}</td>
                 <td>{{ $student->date_of_birth }}</td>
                 <td>{{ $student->gender }}</td>
+                <td>
+                    @foreach($student->courses as $course)
+                        {{ $course->name }}
+                        <br>
+
+                @endforeach
+                </td>
+                <td>@foreach($student->payments as $payment)
+                        {{ $payment->amount }} - {{ $payment->payment_date }}
+                        
+                        <br>
+
+                @endforeach</td>
                 <td>
                 <a href="{{ route('students.show', $student->id) }}">View</a> 
                 <a href="{{ route('students.edit', $student->id) }}">Edit</a>

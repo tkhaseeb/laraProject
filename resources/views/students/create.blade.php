@@ -50,6 +50,16 @@
         <label for="image">Student Photo:</label><br>
         <input type="file" name="photo" id="photo"><br><br>
 
+
+        <h4>Courses</h4>
+
+        <label for="course_id">Select Course:</label><br>
+        <select multiple name="course_id[]">
+            @foreach ($courses as $course)
+                <option value="{{ $course->id }}">{{ $course->name }}</option>
+            @endforeach
+        </select>
+
         <input type="submit" value="Submit">
     </form>
     @endsection

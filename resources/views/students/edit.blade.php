@@ -41,7 +41,11 @@
         <label for="image">Student Photo:</label><br>
         <input type="file" name="photo" id="photo"><br><br>
         
-
+        <select multiple name="course_id[]">
+            @foreach ($courses as $course)
+                <option value="{{ $course->id }}" @if(in_array($course->id,$studentCourses)) selected @endif>{{ $course->name }}</option>
+            @endforeach
+        </select>
         <input type="submit" value="Submit">
     </form>
 @endsection

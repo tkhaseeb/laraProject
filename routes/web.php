@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
@@ -34,3 +35,6 @@ Route::resource('/students', StudentController::class)->names('students')->middl
 
 Route::get('students/{id}/payments/create', [StudentController::class, 'makePayment'])->name('students.payments.create');
 Route::post('students/{id}/payments', [StudentController::class, 'storePayment'])->name('students.payments.store');
+
+
+Route::resource('/courses', CourseController::class)->names('courses');

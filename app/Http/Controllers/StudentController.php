@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use App\Models\Course;
 
 class StudentController extends Controller
 {
@@ -18,19 +19,20 @@ class StudentController extends Controller
                 //$name = request('name');
                 $query->where('email', request('email'))->get();
             }
-        })->paginate(5);
+        })->paginate(25);
         //return $students;
         return view('students.index', compact('students'));
 
     }
 
     public function create(){
-        return view('students.create');
+        $courses = Course::all();
+        return view('students.create',compact('courses'));
     }
 
     public function store(Request $request){
 
-
+//return $request->all();
 
         // Validate the request
         $request->validate([
@@ -58,7 +60,7 @@ class StudentController extends Controller
 
         }
 
-        $student = Student::create($request->except(['city', 'state', 'country', 'postal_code'])); //
+        $student = Student::create($request->except(['city', 'state', 'country', 'postal_code','course_id'])); //
          //$request->only(['name', 'email', 'phone', 'address', 'date_of_birth']);
 
         //return $student;
@@ -69,14 +71,20 @@ class StudentController extends Controller
             'postal_code' => $request->postal_code         
         ]);
 
-        return redirect('/students')->with('success', 'Student created successfully.');
+
+        $student->courses()->attach($request->course_id);
+
+        //return redirect('/students')->with('success', 'Student created successfully.');
     }
 
 
     public function edit($id){
         $student = Student::find($id);
+        $courses = Course::all();
+        $studentCourses = $student->courses->pluck('id')->toArray();
+        //return $studentCourses;
         //return $student;
-        return view('students.edit', compact('student'));
+        return view('students.edit', compact('student', 'courses', 'studentCourses'));
     }
 
     public function update(Request $request, $id){
@@ -90,7 +98,9 @@ class StudentController extends Controller
         $student->date_of_birth = $request->dob;
         $student->save();
 
-        return redirect('/students')->with('success', 'Student updated successfully.');
+        $student->courses()->sync($request->course_id);
+
+        //return redirect('/students')->with('success', 'Student updated successfully.');
     }
 
     public function destroy($id){

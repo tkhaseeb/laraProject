@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Http\Requests\StudentStoreRequest;
+
+
 
 class StudentController extends Controller
 {
@@ -30,27 +33,9 @@ class StudentController extends Controller
         return view('students.create',compact('courses'));
     }
 
-    public function store(Request $request){
+    public function store(StudentStoreRequest $request){
 
-//return $request->all();
-
-        // Validate the request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email',
-            'phone' => 'required|string|max:15',
-            'address' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        //$student = new Student();
-        // $student->name = $request->name;
-        // $student->email = $request->email;
-        // $student->phone = $request->phone;
-        // $student->address = $request->address;
-        // $student->date_of_birth = $request->dob;
-        // $student->save();
+try{
         
         if($request->hasFile('photo')){
             $file = $request->file('photo');
@@ -59,22 +44,28 @@ class StudentController extends Controller
             $request->merge(['photo' => $photo]);
 
         }
+        \DB::transaction(function() use ($request) {
+       
+            $student = Student::create($request->except(['city', 'state', 'country', 'postal_code','course_id'])); //
+            //$request->only(['name', 'email', 'phone', 'address', 'date_of_birth']);
 
-        $student = Student::create($request->except(['city', 'state', 'country', 'postal_code','course_id'])); //
-         //$request->only(['name', 'email', 'phone', 'address', 'date_of_birth']);
-
-        //return $student;
-        $student->profile()->create([
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-            'postal_code' => $request->postal_code         
-        ]);
+            //return $student;
+            $student->profile()->create([
+                'city' => $request->city,
+                'state' => $request->state,
+                'country' => $request->country,
+                'postal_code' => $request->postal_code         
+            ]);
 
 
-        $student->courses()->attach($request->course_id);
+            $student->courses()->attach($request->course_id);
+        });
 
-        //return redirect('/students')->with('success', 'Student created successfully.');
+
+        return redirect('/students')->with('success', 'Student created successfully.');
+    }catch(\Exception $e){
+        return redirect('/students')->with('error', 'Something went wrong. Please try again.'.$e->getMessage()); 
+    }
     }
 
 

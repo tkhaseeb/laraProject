@@ -4,6 +4,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,7 +32,27 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::resource('/students', StudentController::class)->names('students')->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    
+    Route::resource('/students', StudentController::class)->names('students');   
+    //Route::resource('/teachers', TeacherCOntroller::class)->names('teachers'); 
+    //Route::resource('/staffs', StaffController::class)->names('staffs');    
+
+});
+
+Route::middleware(['auth','isAdmin'])->group(function () {
+    
+    Route::get('/admin', [AdminController::class,'index'])->name('admin');   
+    
+});
+
+
+
+// Route::get('/dashboard', function () {
+    //     return view('dashboard');
+    // })->name('dashboard');
+
 
 Route::get('students/{id}/payments/create', [StudentController::class, 'makePayment'])->name('students.payments.create');
 Route::post('students/{id}/payments', [StudentController::class, 'storePayment'])->name('students.payments.store');

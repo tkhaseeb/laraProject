@@ -33,4 +33,6 @@ class Student extends Model
     {
         return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id');
     }
+
+    //eager loading
 }

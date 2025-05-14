@@ -6,11 +6,15 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Http\Requests\StudentStoreRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Traits\SayHelloTrait;
 
 
 
 class StudentController extends Controller
 {
+    use SayHelloTrait;
+
     public function index(){
         
         $students = Student::where(function($query){
@@ -22,8 +26,9 @@ class StudentController extends Controller
                 //$name = request('name');
                 $query->where('email', request('email'))->get();
             }
-        })->paginate(25);
+        })->with(['profile','payments','courses'])->paginate(25);
         //return $students;
+        return $this->sayHello();
         return view('students.index', compact('students'));
 
     }
@@ -130,5 +135,16 @@ try{
         ]);
 
         return redirect('/students')->with('success', 'Payment made successfully.');
+    }
+
+    public function download(){
+        $students = Student::paginate(25);
+        //return $students;
+        $pdf = Pdf::loadView('students.index', compact('students'));
+        return $pdf->download('students.pdf');
+
+        
+
+  
     }
 }

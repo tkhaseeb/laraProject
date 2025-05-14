@@ -5,6 +5,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AdminController;
+use App\Mail\TestMail;
+use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,7 +36,7 @@ require __DIR__.'/auth.php';
 
 
 Route::middleware('auth')->group(function () {
-    
+    Route::get('/students/pdf/download', [StudentController::class, 'download'])->name('students.download');
     Route::resource('/students', StudentController::class)->names('students');   
     //Route::resource('/teachers', TeacherCOntroller::class)->names('teachers'); 
     //Route::resource('/staffs', StaffController::class)->names('staffs');    
@@ -59,3 +61,14 @@ Route::post('students/{id}/payments', [StudentController::class, 'storePayment']
 
 
 Route::resource('/courses', CourseController::class)->names('courses');
+
+
+
+
+
+Route::get('/send-email', function () {
+    $details = "This is a test email from Laravel.";
+    Mail::to('haseeb.net@gmail.com')->queue(new TestMail($details));
+
+    return "Email sent!";
+});
